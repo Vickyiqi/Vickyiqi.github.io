@@ -1,1 +1,1 @@
-
+[NewEraTheory](../read/ChinaTheory.md)
