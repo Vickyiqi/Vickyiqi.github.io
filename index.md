@@ -4,11 +4,7 @@
 **主要内容**
 
 [研究](./research.md)
-
-[随笔](./diary.md)
-
-[学习](./learn.md)
-
-[读书](./read.md)
-
-[影视](./movie.md)
+&emsp [随笔](./diary.md)
+&emsp [学习](./learn.md)
+&emsp [读书](./read.md)
+&emsp [影视](./movie.md)
