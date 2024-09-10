@@ -94,7 +94,7 @@ function draw() {
         // 更新和绘制子弹
         bullets.forEach((bullet, index) => {
             bullet.y -= bulletSpeed;
-            context.fillStyle = bgColor2;
+            context.fillStyle = 'white';
             context.fillRect(bullet.x, bullet.y, 3, 15);
 
             // 检查子弹与砖块的碰撞
