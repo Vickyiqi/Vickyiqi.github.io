@@ -4,8 +4,8 @@ const context = canvas.getContext('2d');
 // 设置颜色
 const bgColor1 = 'teal';
 const bgColor2 = 'gray';
-const brickColor = 'red';
 const textColor = 'white';
+const brickColor = 'red'; // 砖块颜色设为红色
 
 // 飞船图像
 const shipImage = new Image();
@@ -15,17 +15,41 @@ let shipWidth, shipHeight;
 let shipX = canvas.width / 2;
 let shipY = canvas.height - 50; // 初始位置
 
+// 砖块图像列表
+const brickImages = [
+    'img/1.png',
+    'img/2.png',
+    'img/3.png'
+];
+let loadedBrickImages = [];
+
+// 加载砖块图像
+brickImages.forEach((src, index) => {
+    const img = new Image();
+    img.src = src;
+    loadedBrickImages[index] = img;
+});
+
 // 初始化子弹和砖块
 let bullets = [];
-let bulletSpeed = 2;
+let bulletSpeed = 5;
 let bricks = [];
-const brickWidth = 80;
-const brickHeight = 30;
+const brickWidth = 200; // 加宽砖块宽度
+const brickHeight = 130;
+const maxBricksPerRow = Math.floor(canvas.width / (brickWidth + 10)); // 计算每行最多砖块数量
 let showMessage = false;
 
-// 生成砖块
-for (let i = 0; i < 5; i++) {
-    bricks.push({ x: i * (brickWidth + 10) + 50, y: 50, width: brickWidth, height: brickHeight });
+// 生成砖块，并为每个砖块指定不同的图像或默认显示
+for (let i = 0; i < 6; i++) { // 假设砖块数量为10
+    const row = Math.floor(i / maxBricksPerRow); // 当前行数
+    const col = i % maxBricksPerRow; // 当前列数
+    bricks.push({
+        x: col * (brickWidth + 10) + 50, // 换行逻辑
+        y: 50 + row * (brickHeight + 10), // 换行逻辑
+        width: brickWidth, 
+        height: brickHeight,
+        image: loadedBrickImages[i] ? loadedBrickImages[i] : null // 如果没有对应图像，则设置为 null
+    });
 }
 
 // 显示文本
@@ -50,7 +74,6 @@ function drawFireworks() {
     }
 }
 
-// 更新和绘制屏幕内容
 function draw() {
     context.fillStyle = bgColor1;
     context.fillRect(0, 0, canvas.width, canvas.height);
@@ -58,13 +81,18 @@ function draw() {
     if (!showMessage) {
         // 绘制砖块
         bricks.forEach(brick => {
-            context.fillStyle = brickColor;
-            context.fillRect(brick.x, brick.y, brick.width, brick.height);
+            if (brick.image && brick.image.complete) { // 如果有图像并且图像已加载
+                context.drawImage(brick.image, brick.x, brick.y, brick.width, brick.height);
+            } else {
+                // 如果没有图像或图像未加载，使用红色矩形代替
+                context.fillStyle = brickColor;
+                context.fillRect(brick.x, brick.y, brick.width, brick.height);
+            }
         });
 
         // 更新和绘制子弹
         bullets.forEach((bullet, index) => {
-            bullet.y -= bulletSpeed; // 更新子弹位置
+            bullet.y -= bulletSpeed;
             context.fillStyle = bgColor2;
             context.fillRect(bullet.x, bullet.y, 3, 15);
 
@@ -117,15 +145,33 @@ window.addEventListener('keydown', (event) => {
     if (shipY + shipHeight > canvas.height) shipY = canvas.height - shipHeight;
 });
 
-// 每秒发射子弹
+// 添加触摸事件处理
+canvas.addEventListener('touchstart', handleTouchMove);
+canvas.addEventListener('touchmove', handleTouchMove);
+
+function handleTouchMove(event) {
+    event.preventDefault();
+    const touch = event.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    shipX = touch.clientX - rect.left - shipWidth / 2;
+    shipY = touch.clientY - rect.top - shipHeight / 2;
+
+    // 限制飞船的移动范围在屏幕内部
+    if (shipX < 0) shipX = 0;
+    if (shipX + shipWidth > canvas.width) shipX = canvas.width - shipWidth;
+    if (shipY < 0) shipY = 0;
+    if (shipY + shipHeight > canvas.height) shipY = canvas.height - shipHeight;
+}
+
+// 每500毫秒发射子弹
 setInterval(() => {
     if (!showMessage) {
         bullets.push({ x: shipX + shipWidth / 2 - 1.5, y: shipY });
     }
-}, 1000);
+}, 500); // 减少时间间隔来增加射击频率
 
 // 等待图像加载完成后启动游戏
-shipImage.onload = function() {
+shipImage.onload = function () {
     shipWidth = shipImage.width * scaleFactor;
     shipHeight = shipImage.height * scaleFactor;
     draw();
