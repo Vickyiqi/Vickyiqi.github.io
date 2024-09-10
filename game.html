@@ -5,12 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>Alien Invasion Game</title>
     <style>
-        body { text-align: center; margin: 0; }
-        canvas { background-color: teal; display: block; margin: auto; }
+        body {
+            text-align: center;
+            margin: 0;
+            overflow: hidden; /* 防止滚动 */
+        }
+        canvas {
+            display: block;
+            margin: auto;
+            background-color: teal;
+            max-width: 100%;
+            height: auto; /* 保持宽高比 */
+        }
     </style>
 </head>
 <body>
-    <h1>外星人入侵</h1>
+    <h1>外星人！入侵！</h1>
     <canvas id="gameCanvas" width="800" height="800"></canvas>
     <script src="game.js"></script>
 </body>
