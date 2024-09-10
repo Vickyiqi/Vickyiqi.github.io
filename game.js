@@ -153,16 +153,34 @@ canvas.addEventListener('touchmove', handleTouchMove);
 function handleTouchMove(event) {
     event.preventDefault();
     const touch = event.touches[0];
-    const rect = canvas.getBoundingClientRect();
-    shipX = touch.clientX - rect.left - shipWidth / 2;
-    shipY = touch.clientY - rect.top - shipHeight / 2;
+    const rect = canvas.getBoundingClientRect(); // 获取画布相对于视口的大小和位置
+
+    // 计算设备像素比率
+    const scaleX = canvas.width / rect.width;    // 计算横向缩放比例
+    const scaleY = canvas.height / rect.height;  // 计算纵向缩放比例
+
+    // 计算触控点相对于 canvas 的坐标，考虑到缩放比例
+    const touchX = (touch.clientX - rect.left) * scaleX;
+    const touchY = (touch.clientY - rect.top) * scaleY;
+
+    // 计算飞船的位置，使其中心点与触控点对齐
+    shipX = touchX - shipWidth / 2;
+    shipY = touchY - shipHeight / 2;
 
     // 限制飞船的移动范围在屏幕内部
-    if (shipX < 0) shipX = 0;
-    if (shipX + shipWidth > canvas.width) shipX = canvas.width - shipWidth;
-    if (shipY < 0) shipY = 0;
-    if (shipY + shipHeight > canvas.height) shipY = canvas.height - shipHeight;
+    if (shipX < 0) {
+        shipX = 0;
+    } else if (shipX + shipWidth > canvas.width) {
+        shipX = canvas.width - shipWidth;
+    }
+
+    if (shipY < 0) {
+        shipY = 0;
+    } else if (shipY + shipHeight > canvas.height) {
+        shipY = canvas.height - shipHeight;
+    }
 }
+
 
 // 每500毫秒发射子弹
 setInterval(() => {
