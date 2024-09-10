@@ -1,15 +1,6 @@
 const canvas = document.getElementById('gameCanvas');
 const context = canvas.getContext('2d');
 
-// 动态设置 Canvas 的宽高，适应手机屏幕
-function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    adjustGameElements();  // 根据新的 Canvas 尺寸调整游戏元素
-}
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas(); // 页面加载时调整一次
-
 // 设置颜色
 const bgColor1 = 'teal';
 const bgColor2 = 'gray';
@@ -21,7 +12,8 @@ const shipImage = new Image();
 shipImage.src = 'img/xu.bmp'; // 替换为实际的图像路径
 const scaleFactor = 0.1;
 let shipWidth, shipHeight;
-let shipX, shipY; // 初始化位置将在调整后设置
+let shipX = canvas.width / 2;
+let shipY = canvas.height - 50; // 初始位置
 
 // 初始化子弹和砖块
 let bullets = [];
@@ -31,24 +23,14 @@ const brickWidth = 80;
 const brickHeight = 30;
 let showMessage = false;
 
-// 调整游戏元素尺寸和位置
-function adjustGameElements() {
-    shipWidth = shipImage.width * scaleFactor;
-    shipHeight = shipImage.height * scaleFactor;
-    shipX = canvas.width / 2 - shipWidth / 2;
-    shipY = canvas.height - shipHeight - 20; // 距离底部20像素
-
-    // 重新计算砖块的位置和大小
-    bricks = [];
-    for (let i = 0; i < 5; i++) {
-        const brickX = (i * (brickWidth + 10)) + (canvas.width / 2 - (5 * brickWidth + 40) / 2);
-        bricks.push({ x: brickX, y: 50, width: brickWidth, height: brickHeight });
-    }
+// 生成砖块
+for (let i = 0; i < 5; i++) {
+    bricks.push({ x: i * (brickWidth + 10) + 50, y: 50, width: brickWidth, height: brickHeight });
 }
 
 // 显示文本
 function displayText(text, color) {
-    context.font = "24px sans-serif";
+    context.font = "72px sans-serif";
     context.fillStyle = color;
     context.textAlign = "center";
     context.fillText(text, canvas.width / 2, canvas.height / 2);
@@ -118,17 +100,15 @@ function draw() {
     // 绘制飞船
     context.drawImage(shipImage, shipX, shipY, shipWidth, shipHeight);
 
-    requestAnimationFrame(draw); // 使用 requestAnimationFrame 优化重绘
+    requestAnimationFrame(draw);
 }
 
 // 处理键盘事件
 window.addEventListener('keydown', (event) => {
-    const speed = canvas.width * 0.01; // 根据 Canvas 的宽度设置飞船移动速度
-
-    if (event.key === 'ArrowLeft') shipX -= speed;
-    if (event.key === 'ArrowRight') shipX += speed;
-    if (event.key === 'ArrowUp') shipY -= speed;
-    if (event.key === 'ArrowDown') shipY += speed;
+    if (event.key === 'ArrowLeft') shipX -= 10;
+    if (event.key === 'ArrowRight') shipX += 10;
+    if (event.key === 'ArrowUp') shipY -= 10;
+    if (event.key === 'ArrowDown') shipY += 10;
 
     // 限制飞船的移动范围在屏幕内部
     if (shipX < 0) shipX = 0;
@@ -136,27 +116,6 @@ window.addEventListener('keydown', (event) => {
     if (shipY < 0) shipY = 0;
     if (shipY + shipHeight > canvas.height) shipY = canvas.height - shipHeight;
 });
-
-// 支持触摸事件
-canvas.addEventListener('touchstart', handleTouch);
-canvas.addEventListener('touchmove', handleTouch);
-
-function handleTouch(event) {
-    event.preventDefault(); // 阻止默认的触摸滚动行为
-    const touch = event.touches[0];
-    const touchX = touch.clientX;
-    const touchY = touch.clientY;
-
-    // 直接将飞船的位置设置为触摸位置
-    shipX = touchX - shipWidth / 2;
-    shipY = touchY - shipHeight / 2;
-
-    // 限制飞船的移动范围在屏幕内部
-    if (shipX < 0) shipX = 0;
-    if (shipX + shipWidth > canvas.width) shipX = canvas.width - shipWidth;
-    if (shipY < 0) shipY = 0;
-    if (shipY + shipHeight > canvas.height) shipY = canvas.height - shipHeight;
-}
 
 // 每秒发射子弹
 setInterval(() => {
@@ -167,6 +126,7 @@ setInterval(() => {
 
 // 等待图像加载完成后启动游戏
 shipImage.onload = function() {
-    adjustGameElements(); // 调整游戏元素
+    shipWidth = shipImage.width * scaleFactor;
+    shipHeight = shipImage.height * scaleFactor;
     draw();
 };
