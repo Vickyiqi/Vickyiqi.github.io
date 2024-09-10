@@ -12,14 +12,15 @@ const shipImage = new Image();
 shipImage.src = 'img/xu.bmp'; // 替换为实际的图像路径
 const scaleFactor = 0.1;
 let shipWidth, shipHeight;
-let shipX = canvas.width / 2;
-let shipY = canvas.height - 50; // 初始位置
+let shipX, shipY; // 飞船的初始位置将在图像加载后设置
 
 // 砖块图像列表
 const brickImages = [
     'img/1.png',
     'img/2.png',
-    'img/3.png'
+    'img/3.png',
+    'img/4.png',
+    'img/5.png'
 ];
 let loadedBrickImages = [];
 
@@ -40,7 +41,7 @@ const maxBricksPerRow = Math.floor(canvas.width / (brickWidth + 10)); // 计算�
 let showMessage = false;
 
 // 生成砖块，并为每个砖块指定不同的图像或默认显示
-for (let i = 0; i < 6; i++) { // 假设砖块数量为10
+for (let i = 0; i < 6; i++) { // 假设砖块数量为6
     const row = Math.floor(i / maxBricksPerRow); // 当前行数
     const col = i % maxBricksPerRow; // 当前列数
     bricks.push({
@@ -174,5 +175,10 @@ setInterval(() => {
 shipImage.onload = function () {
     shipWidth = shipImage.width * scaleFactor;
     shipHeight = shipImage.height * scaleFactor;
+    
+    // 将飞船的初始位置设置为屏幕右下角对齐
+    shipX = canvas.width - shipWidth;
+    shipY = canvas.height - shipHeight;
+    
     draw();
 };
