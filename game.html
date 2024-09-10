@@ -5,13 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alien Invasion Game</title>
     <style>
-        body { text-align: center; margin: 0; }
-        canvas { background-color: teal; display: block; margin: auto; }
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+        h1 {
+            font-size: 2em;
+            margin: 10px;
+        }
+        #gameContainer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+            height: 100%;
+            max-height: 800px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        canvas {
+            background-color: teal;
+            width: 100%;
+            height: 100%;
+            resize: both; /* Allows the canvas to be resizable */
+            overflow: auto;
+        }
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5em;
+            }
+            #gameContainer {
+                max-width: 100%;
+                max-height: 100%;
+            }
+        }
     </style>
 </head>
 <body>
-    <h1>Alien Invasion Game</h1>
-    <canvas id="gameCanvas" width="800" height="800"></canvas>
+    <h1>外星人！入侵！！</h1>
+    <div id="gameContainer">
+        <canvas id="gameCanvas" width="800" height="800"></canvas>
+    </div>
     <script src="game.js"></script>
 </body>
 </html>
