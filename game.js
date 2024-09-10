@@ -2,8 +2,12 @@ const canvas = document.getElementById('gameCanvas');
 const context = canvas.getContext('2d');
 
 // 动态设置 Canvas 的宽高，适应手机屏幕
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas(); // 页面加载时调整一次
 
 // 设置颜色
 const bgColor1 = 'teal';
@@ -104,7 +108,7 @@ function draw() {
     // 绘制飞船
     context.drawImage(shipImage, shipX, shipY, shipWidth, shipHeight);
 
-    requestAnimationFrame(draw);
+    requestAnimationFrame(draw); // 使用 requestAnimationFrame 优化重绘
 }
 
 // 处理键盘事件
@@ -124,8 +128,17 @@ window.addEventListener('keydown', (event) => {
 });
 
 // 支持触摸事件
-canvas.addEventListener('touchstart', handleTouch);
-canvas.addEventListener('touchmove', handleTouch);
+let isTouching = false;
+canvas.addEventListener('touchstart', (event) => {
+    isTouching = true;
+    handleTouch(event);
+});
+canvas.addEventListener('touchmove', (event) => {
+    if (isTouching) handleTouch(event);
+});
+canvas.addEventListener('touchend', () => {
+    isTouching = false;
+});
 
 function handleTouch(event) {
     event.preventDefault(); // 阻止默认的触摸滚动行为
@@ -133,11 +146,9 @@ function handleTouch(event) {
     const touchX = touch.clientX;
     const touchY = touch.clientY;
 
-    // 判断触摸位置，并移动飞船
-    if (touchX < shipX) shipX -= 5;
-    if (touchX > shipX + shipWidth) shipX += 5;
-    if (touchY < shipY) shipY -= 5;
-    if (touchY > shipY + shipHeight) shipY += 5;
+    // 直接将飞船移动到触摸位置
+    shipX = touchX - shipWidth / 2;
+    shipY = touchY - shipHeight / 2;
 
     // 限制飞船的移动范围在屏幕内部
     if (shipX < 0) shipX = 0;
