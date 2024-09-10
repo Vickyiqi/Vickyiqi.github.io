@@ -139,17 +139,8 @@ window.addEventListener('keydown', (event) => {
 });
 
 // 支持触摸事件
-let isTouching = false;
-canvas.addEventListener('touchstart', (event) => {
-    isTouching = true;
-    handleTouch(event);
-});
-canvas.addEventListener('touchmove', (event) => {
-    if (isTouching) handleTouch(event);
-});
-canvas.addEventListener('touchend', () => {
-    isTouching = false;
-});
+canvas.addEventListener('touchstart', handleTouch);
+canvas.addEventListener('touchmove', handleTouch);
 
 function handleTouch(event) {
     event.preventDefault(); // 阻止默认的触摸滚动行为
@@ -157,7 +148,7 @@ function handleTouch(event) {
     const touchX = touch.clientX;
     const touchY = touch.clientY;
 
-    // 直接将飞船移动到触摸位置
+    // 直接将飞船的位置设置为触摸位置
     shipX = touchX - shipWidth / 2;
     shipY = touchY - shipHeight / 2;
 
