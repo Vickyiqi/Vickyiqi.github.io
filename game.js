@@ -21,8 +21,7 @@ const shipImage = new Image();
 shipImage.src = 'img/xu.bmp'; // 替换为实际的图像路径
 const scaleFactor = 0.1;
 let shipWidth, shipHeight;
-let shipX = canvas.width / 2;
-let shipY = canvas.height - 100; // 距离底部一定距离
+let shipX, shipY; // 初始化位置将在调整后设置
 
 // 初始化子弹和砖块
 let bullets = [];
