@@ -2,26 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alien Invasion Game</title>
     <style>
-        body {
-            text-align: center;
-            margin: 0;
-            overflow: hidden; /* 防止滚动 */
-        }
-        canvas {
-            display: block;
-            margin: auto;
-            background-color: teal;
-            width: 100vw;  /* 占满可视区域宽度 */
-            height: 100vh; /* 占满可视区域高度 */
-        }
+        body { text-align: center; margin: 0; }
+        canvas { background-color: teal; display: block; margin: auto; }
     </style>
 </head>
 <body>
-    <h1>外星人！入侵！！</h1>
-    <canvas id="gameCanvas"></canvas> <!-- 宽高由JavaScript动态设置 -->
+    <h1>Alien Invasion Game</h1>
+    <canvas id="gameCanvas" width="800" height="800"></canvas>
     <script src="game.js"></script>
 </body>
 </html>
