@@ -5,6 +5,7 @@ const context = canvas.getContext('2d');
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    adjustGameElements();  // 根据新的 Canvas 尺寸调整游戏元素
 }
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas(); // 页面加载时调整一次
@@ -31,14 +32,24 @@ const brickWidth = 80;
 const brickHeight = 30;
 let showMessage = false;
 
-// 生成砖块
-for (let i = 0; i < 5; i++) {
-    bricks.push({ x: i * (brickWidth + 10) + 50, y: 50, width: brickWidth, height: brickHeight });
+// 调整游戏元素尺寸和位置
+function adjustGameElements() {
+    shipWidth = shipImage.width * scaleFactor;
+    shipHeight = shipImage.height * scaleFactor;
+    shipX = canvas.width / 2 - shipWidth / 2;
+    shipY = canvas.height - shipHeight - 20; // 距离底部20像素
+
+    // 重新计算砖块的位置和大小
+    bricks = [];
+    for (let i = 0; i < 5; i++) {
+        const brickX = (i * (brickWidth + 10)) + (canvas.width / 2 - (5 * brickWidth + 40) / 2);
+        bricks.push({ x: brickX, y: 50, width: brickWidth, height: brickHeight });
+    }
 }
 
 // 显示文本
 function displayText(text, color) {
-    context.font = "72px sans-serif";
+    context.font = "24px sans-serif";
     context.fillStyle = color;
     context.textAlign = "center";
     context.fillText(text, canvas.width / 2, canvas.height / 2);
@@ -166,7 +177,6 @@ setInterval(() => {
 
 // 等待图像加载完成后启动游戏
 shipImage.onload = function() {
-    shipWidth = shipImage.width * scaleFactor;
-    shipHeight = shipImage.height * scaleFactor;
+    adjustGameElements(); // 调整游戏元素
     draw();
 };
