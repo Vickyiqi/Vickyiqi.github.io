@@ -14,14 +14,14 @@
             display: block;
             margin: auto;
             background-color: teal;
-            max-width: 100%;
-            height: auto; /* 保持宽高比 */
+            width: 100vw;  /* 占满可视区域宽度 */
+            height: 100vh; /* 占满可视区域高度 */
         }
     </style>
 </head>
 <body>
-    <h1>外星人！入侵！</h1>
-    <canvas id="gameCanvas"></canvas> <!-- 移除宽高属性，由 JavaScript 动态设置 -->
+    <h1>外星人！入侵！！</h1>
+    <canvas id="gameCanvas"></canvas> <!-- 宽高由JavaScript动态设置 -->
     <script src="game.js"></script>
 </body>
 </html>
