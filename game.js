@@ -1,6 +1,10 @@
 const canvas = document.getElementById('gameCanvas');
 const context = canvas.getContext('2d');
 
+// 动态设置 Canvas 的宽高，适应手机屏幕
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
 // 设置颜色
 const bgColor1 = 'teal';
 const bgColor2 = 'gray';
@@ -13,7 +17,7 @@ shipImage.src = 'img/xu.bmp'; // 替换为实际的图像路径
 const scaleFactor = 0.1;
 let shipWidth, shipHeight;
 let shipX = canvas.width / 2;
-let shipY = canvas.height - 50; // 初始位置
+let shipY = canvas.height - 100; // 距离底部一定距离
 
 // 初始化子弹和砖块
 let bullets = [];
@@ -105,10 +109,12 @@ function draw() {
 
 // 处理键盘事件
 window.addEventListener('keydown', (event) => {
-    if (event.key === 'ArrowLeft') shipX -= 10;
-    if (event.key === 'ArrowRight') shipX += 10;
-    if (event.key === 'ArrowUp') shipY -= 10;
-    if (event.key === 'ArrowDown') shipY += 10;
+    const speed = canvas.width * 0.01; // 根据 Canvas 的宽度设置飞船移动速度
+
+    if (event.key === 'ArrowLeft') shipX -= speed;
+    if (event.key === 'ArrowRight') shipX += speed;
+    if (event.key === 'ArrowUp') shipY -= speed;
+    if (event.key === 'ArrowDown') shipY += speed;
 
     // 限制飞船的移动范围在屏幕内部
     if (shipX < 0) shipX = 0;
@@ -116,6 +122,29 @@ window.addEventListener('keydown', (event) => {
     if (shipY < 0) shipY = 0;
     if (shipY + shipHeight > canvas.height) shipY = canvas.height - shipHeight;
 });
+
+// 支持触摸事件
+canvas.addEventListener('touchstart', handleTouch);
+canvas.addEventListener('touchmove', handleTouch);
+
+function handleTouch(event) {
+    event.preventDefault(); // 阻止默认的触摸滚动行为
+    const touch = event.touches[0];
+    const touchX = touch.clientX;
+    const touchY = touch.clientY;
+
+    // 判断触摸位置，并移动飞船
+    if (touchX < shipX) shipX -= 5;
+    if (touchX > shipX + shipWidth) shipX += 5;
+    if (touchY < shipY) shipY -= 5;
+    if (touchY > shipY + shipHeight) shipY += 5;
+
+    // 限制飞船的移动范围在屏幕内部
+    if (shipX < 0) shipX = 0;
+    if (shipX + shipWidth > canvas.width) shipX = canvas.width - shipWidth;
+    if (shipY < 0) shipY = 0;
+    if (shipY + shipHeight > canvas.height) shipY = canvas.height - shipHeight;
+}
 
 // 每秒发射子弹
 setInterval(() => {
